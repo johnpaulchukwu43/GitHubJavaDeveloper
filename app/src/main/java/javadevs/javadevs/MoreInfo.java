@@ -1,3 +1,8 @@
+/*
+Written By Johnpaul Chukwu
+This Class is the Detail view class that shows more info of the Item Clicked in a list
+*/
+
 package javadevs.javadevs;
 
 import android.content.ActivityNotFoundException;
@@ -31,11 +36,9 @@ public class MoreInfo extends AppCompatActivity {
         mImageView = (ImageView) findViewById(R.id.moreImage);
         usernameTxt = (TextView) findViewById(R.id.MoreUsername);
         ProfileTxt = (TextView) findViewById(R.id.moreLink);
-
-
-
+        //Here we get the Intent Extra that was passed from the main Activity 
         usernameTxt.setText(getIntent().getStringExtra("username"));
-      
+      //use Picasso Library to load the Image from the Url gotten from the Intent
         Picasso.with(this)
                 .load(getIntent().getStringExtra("image"))
                 .into(mImageView);
@@ -46,8 +49,10 @@ public class MoreInfo extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater Inflater = getMenuInflater();
-        Inflater.inflate(R.menu.share,menu);
+        Inflater.inflatef(R.menu.share,menu);
+        //Inflate the view with our menu item
         MenuItem mitem = menu.findItem(R.id.action_share);
+        //Make use of the shareActionProvider class
         ShareActionProvider shareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(mitem);
         if(shareActionProvider!=null){
             shareActionProvider.setShareIntent(sharedIntent());
@@ -59,7 +64,9 @@ public class MoreInfo extends AppCompatActivity {
     }
 
     private Intent sharedIntent(){
+        //create an implicit intent to send info to other apps
     Intent shared = new Intent((Intent.ACTION_SEND));
+        //pass username and profile Link as Extra info to the Intent
         String userInfoSend = "Check out this awesome developer @"+getIntent().getStringExtra("username")+getIntent().getStringExtra("profile_url");
         shared.setType("text/plain");
         shared.putExtra( Intent.EXTRA_TEXT,userInfoSend);
@@ -68,12 +75,14 @@ public class MoreInfo extends AppCompatActivity {
 
     }
 
+    //this method calls the browser and loads the url of the link that was passed when it was clicked 
     public void launchBrowserOnRequest(View V){
         try {
             String link = getIntent().getStringExtra("profile_url");
             Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
             startActivity(myIntent);
         } catch (ActivityNotFoundException e) {
+            //to make sure our user as a browser
             Toast.makeText(this, "No application can handle this request."
                     + " Please install a webbrowser",  Toast.LENGTH_LONG).show();
             e.printStackTrace();
