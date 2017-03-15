@@ -17,11 +17,12 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 /**
  * Created by CHUKWU JOHNPAUL on 09/03/17.
+ In this Class we create our own Custom Recycler View Adapter
  */
 
 public class adapt extends RecyclerView.Adapter<adapt.ViewHolder> {
     private ArrayList<developer> dev;// generic list that only accepts type of developer class
-    private Context ctx;
+    private Context ctx;//Context 
 
     public adapt( ArrayList<developer>dev,Context ctx) {
         this.ctx = ctx;
@@ -34,12 +35,15 @@ public class adapt extends RecyclerView.Adapter<adapt.ViewHolder> {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.developer_item,parent,false);
         return new adapt.ViewHolder(v,ctx,dev);
+        
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final developer myDev = dev.get(position);
+        //Here we bind the values from the developer class model to their respective views
         holder.usernameTxt.setText(myDev.getUsername());
+        //we make use of Picasso Library to easily load our images
         Picasso.with(ctx)
                 .load(myDev.getImageUrl())
 
@@ -71,17 +75,16 @@ public class adapt extends RecyclerView.Adapter<adapt.ViewHolder> {
 
         @Override
         public void onClick(View v) {
+            //On click of any of the items this method is called 
             int position = getAdapterPosition();
-            developer theD = this.myDevelopers.get(position);
+            developer theD = this.myDevelopers.get(position);//get the postion of the item clicked
 
-            Intent intent = new Intent(this.ctx, MoreInfo.class);
-
-
-            intent.putExtra("username",theD.getUsername());
+            Intent intent = new Intent(this.ctx, MoreInfo.class);//Create an explict Intent to our MoreInfoClass
+            //Pass the username,image and profile Url to the Intent
            intent.putExtra("profile_url",theD.getProfileUrl());
             intent.putExtra("image",theD.getImageUrl());
             intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
-            this.ctx.startActivity(intent);
+            this.ctx.startActivity(intent);//start the Intent
 
         }
     }
