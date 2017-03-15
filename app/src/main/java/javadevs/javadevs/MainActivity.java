@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<developer>mDeveloper;
     public AlertDialog.Builder mAlertDialog;
     public  AlertDialog mAlert;
+    //url to query for java developers in lagos on github
     private static final String _URL ="https://api.github.com/search/users?q=language:java+location:lagos,nigeria";
 
     @Override
@@ -73,8 +74,6 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
        MenuInflater Inflater = getMenuInflater();
         Inflater.inflate(R.menu.share,menu);
-
-
         return true;
     }
 
@@ -94,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
         final ProgressDialog mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage("Loading Feeds..Please Wait");
         mProgressDialog.show();
+        //using volley stringRequest to fetch json data
         StringRequest mStringRequest = new StringRequest(Request.Method.GET,_URL,
 
                 //Listener to make callbacks when data is gotten successfully
@@ -110,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
 
                             for(int i=0;i< mJsonArray.length();i++){
                                 JSONObject SingleDevObj = mJsonArray.getJSONObject(i);
+                                //pass the data into developer class instance 
                                 developer person = new developer(
                                         SingleDevObj.getString("login"),
                                         SingleDevObj.getString("avatar_url"),
@@ -138,8 +139,9 @@ public class MainActivity extends AppCompatActivity {
                         mProgressDialog.dismiss();
                     }
                 });
-
+        
         RequestQueue mRequestQueue =  Volley.newRequestQueue(getApplicationContext());
+        //Add the StringRequest above to the RequestQueue
         mRequestQueue.add(mStringRequest);
     }
 
@@ -149,6 +151,7 @@ public class MainActivity extends AppCompatActivity {
         boolean wifi = manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnectedOrConnecting();
         return wifi;
     }
+    
     //check for Mobile Data Connection
     public boolean CheckForMobileNetwork(){
         ConnectivityManager manager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -157,6 +160,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    //this function calls the LoadData if there is either wifi or mobile connection or else shows the custom dialog message
     public void successLoad(){
         if(CheckForMobileNetwork() || CheckForWifiNetwork()){
             LoadData();
